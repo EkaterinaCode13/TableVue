@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Table</title>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="main.css" />
+        <script defer src="https://unpkg.com/vue"></script>
+        <script src="https://unpkg.com/vue-router@4"></script>
+        <script defer src="main.js"></script>
+    </head>
+    <body>
+        <form @submit.prevent="save">
+            <div>
+                <label for="name">Наименование:</label>
+                <select v-model="selectedRow" id="name" name="name">
+                    <option value="0"></option>
+                    <option v-for="(row, index) in rows" :value="index + 1">
+                        Строка {{ index + 1 }}
+                    </option>
+                </select>
+            </div>
+            <div>
+                <label for="month">Месяц:</label>
+                <select v-model="selectedMonth" id="month" name="month">
+                    <option value="0"></option>
+                    <option v-for="(month, index) in months" :value="index + 1">
+                        {{ month }}
+                    </option>
+                </select>
+            </div>
+            <div>
+                <label for="number">Значение:</label>
+                <input
+                    @keydown="validate"
+                    v-model="numbersValue"
+                    type="text"
+                    id="number"
+                />
+            </div>
+            <div>
+                <button type="submit" :disabled="!isSaveActive" id="save">
+                    Сохранить
+                </button>
+                <button
+                    @click="reset"
+                    :disabled="!isResetActive"
+                    id="delete"
+                    type="reset"
+                >
+                    Очистить
+                </button>
+            </div>
+        </form>
+        <table>
+            <colgroup span="10"></colgroup>
+            <colgroup span="3" id="oct-nov"></colgroup>
+            <thead>
+                <tr>
+                    <th rowspan="2">Наименование</th>
+                    <th colspan="3">Квартал I</th>
+                    <th colspan="3">Квартал II</th>
+                    <th colspan="3">Квартал III</th>
+                    <th colspan="3">Квартал IV</th>
+                    <th rowspan="2">Всего</th>
+                </tr>
+                <tr>
+                    <th
+                        v-for="(month, index) in months"
+                        :class="[selectedMonth == index + 1 ? 'highlighted' : '']"
+                    >
+                        {{ month }}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    v-for="(row, index) in rows"
+                    :class="[selectedRow == index + 1 ? 'highlighted' : '']"
+                >
+                    <td>Строка {{ index + 1 }}</td>
+                    <td
+                        v-for="(td, index) in row"
+                        :class="[selectedMonth == index + 1 ? 'highlighted' : '']"
+                    >
+                        {{ td }}
+                    </td>
+
+                    <td>{{ sums[index] }}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>Итого</td>
+                    <td
+                        v-for="(total, index) in totals"
+                        :class="[selectedMonth == index + 1 ? 'highlighted' : '']"
+                    >
+                        {{ total }}
+                    </td>
+                    <td>{{ totalSum }}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </body>
+</html>
